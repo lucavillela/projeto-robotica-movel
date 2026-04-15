@@ -1,33 +1,43 @@
-# Robô Diferencial ROS 2 - Adaptação Mac M4 (ARM64)
+# Modelagem de Robo Diferencial em ROS 2 (URDF/XACRO)
 
-Este projeto apresenta a modelagem e simulação de um robô diferencial utilizando ROS 2 Humble. O diferencial técnico deste repositório é a adaptação completa para execução nativa em arquitetura **ARM64 (Apple Silicon M4)** através do UTM.
+**Autor:** Luca Torres Villela
 
-## Adaptações para Mac M4
+Este projeto contem a modelagem visual, cinematica e fisica (inercia e colisao) de um robo de tracao diferencial, desenvolvido como avaliacao AV1. O projeto utiliza o framework ROS 2 (Humble) e a linguagem de macro XACRO para estruturacao do modelo 3D.
 
-Ao seguir tutoriais tradicionais de ROS 2, desenvolvedores com Mac M1/M2/M3/M4 enfrentam barreiras de arquitetura. Abaixo, as soluções implementadas:
+## Descricao do Projeto
 
-### 1. Simulador: Gazebo Classic vs. Gazebo Fortress
-O **Gazebo Classic** (utilizado em muitos tutoriais) não possui binários oficiais para ARM64 no Ubuntu 22.04. 
-* **Solução:** Migramos para o **Gazebo Fortress (Ignition)**, que possui suporte nativo a ARM e melhor desempenho gráfico nos chips Apple Silicon.
+O objetivo deste pacote e criar uma representacao computacional precisa de um chassi robotico com duas rodas motrizes e uma roda de apoio (caster wheel). O modelo esta configurado para ser visualizado e manipulado no RViz, utilizando o `joint_state_publisher_gui` para validar a rotacao das juntas continuas.
 
-### 2. Estrutura de Arquivos (XACRO)
-Em vez de um arquivo URDF único e estático, o projeto utiliza **XACRO (XML Macros)** para:
-* **Modularidade:** Divisão em `robot_core` (visuais), `gazebo_control` (plugins) e `inertial_macros` (física).
-* **Física Real:** Implementação de tags de `<collision>` e matrizes de `<inertial>` calculadas para as dimensões exatas solicitadas (0.6x0.4x0.2).
+## Estrutura de Arquivos
 
-### 3. Comunicação: ros_gz_bridge
-No Gazebo Classic, o plugin de controle fala diretamente com o ROS. No Gazebo Fortress, é necessário uma "ponte" (`parameter_bridge`) para traduzir as mensagens de velocidade (`/cmd_vel`) entre o ecossistema ROS e o simulador.
+A arquitetura do modelo foi modularizada utilizando XACRO para evitar repeticao de codigo e facilitar a manutencao:
 
-## Estrutura do Projeto
-- `robot.urdf.xacro`: Arquivo mestre que une os módulos.
-- `robot_core.xacro`: Geometria do chassi (0.6x0.4x0.2) e rodas.
-- `gazebo_control.xacro`: Configuração do plugin de tração diferencial para Ignition.
-- `inertial_macros.xacro`: Fórmulas de inércia para esferas, cilindros e caixas.
+* `robot.urdf.xacro`: Arquivo principal que atua como ponto de entrada e importa os demais modulos.
+* `robot_core.xacro`: Contem a definicao geometrica do chassi (caixa de 0.6 x 0.4 x 0.2), das rodas motrizes (cilindros) e da roda boba (esfera), alem das propriedades de colisao e materiais visuais.
+* `inertial_macros.xacro`: Biblioteca de macros matematicas para o calculo automatico da matriz de inercia de cilindros, esferas e caixas.
+
+## Requisitos de Sistema
+
+* Sistema Operacional: Ubuntu 22.04 (Suporte nativo a arquitetura ARM64 / Apple Silicon via UTM).
+* ROS 2 Versao: Humble Hawksbill.
+* Pacotes adicionais: `xacro`, `joint-state-publisher-gui`.
 
 ## Como Executar
-1. Certifique-se de estar no ambiente Ubuntu (UTM) com ROS 2 Humble instalado.
-2. Clone este repositório no seu `ros_ws/src`.
-3. Instale as dependências: `sudo apt install ros-humble-ros-gz ros-humble-teleop-twist-keyboard`.
-4. Execute o script de automação: `./run_simulation.sh`.
 
-**Nota:** Lembre-se de clicar no botão "Play" no canto inferior esquerdo do Gazebo ao iniciar, caso a física comece pausada.
+1.  Abra o terminal e navegue ate a raiz do seu workspace:
+    ```bash
+    cd ~/ros_ws
+    ```
+
+2.  Certifique-se de carregar o ambiente do ROS 2:
+    ```bash
+    source /opt/ros/humble/setup.bash
+    ```
+
+3.  Inicie a visualizacao no RViz executando o comando de lancamento:
+    ```bash
+    ros2 launch urdf_tutorial display.launch.py model:=src/my_robot_description/urdf/robot.urdf.xacro
+    ```
+    *(Nota: Se preferir, utilize o script `run_rviz.sh` disponibilizado na raiz do workspace).*
+
+4.  Uma janela do RViz sera aberta junto com um painel de controle. Utilize os controles deslizantes no painel "Joint State Publisher" para testar a rotacao das rodas independentes.
