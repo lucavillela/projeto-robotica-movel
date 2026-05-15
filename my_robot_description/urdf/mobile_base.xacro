@@ -12,26 +12,6 @@ Luca Torres Villela
     <xacro:property name="wheel_radius" value="0.1" />
     <xacro:property name="wheel_length" value="0.05" />
 
-    <material name="grey">
-        <color rgba="0.7 0.7 0.7 1" />
-    </material>
-
-    <material name="red">
-        <color rgba="0.6 0 0 1" />
-    </material>
-
-    <material name="blue">
-        <color rgba="0 0 0.6 1" />
-    </material>
-
-    <material name="green">
-        <color rgba="0 0.6 0 1" />
-    </material>
-
-    <material name="white">
-        <color rgba="1 1 1 1" />
-    </material>
-
     <link name="base_footprint" />
 
     <link name="base_link">
@@ -44,15 +24,6 @@ Luca Torres Villela
         </visual>
     </link>
 
-    <link name="lidar">
-        <visual>
-            <geometry>
-                <cylinder radius="0.1" length="0.05" />
-            </geometry>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <material name="white" />
-        </visual>
-    </link>
 
     <link name="left_wheel">
         <visual>
@@ -90,12 +61,6 @@ Luca Torres Villela
         <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0"/>
     </joint>
 
-    <joint name="base_lidar_joint" type="fixed">
-        <parent link="base_link" />
-        <child link="lidar" />
-        <origin xyz="0 0 0.225" rpy="0 0 0" />
-    </joint>
-
     <joint name="base_left_wheel_joint" type="continuous">
         <parent link="base_link" />
         <child link="left_wheel" />
@@ -115,4 +80,19 @@ Luca Torres Villela
         <child link="caster_wheel" />
         <origin xyz="${base_length / 3.0} 0 ${-wheel_radius / 2.0}" rpy="0 0 0" />
     </joint>
+    
+    <collision>
+        <geometry>
+            <box size="${base_length} ${base_width} ${base_height}" />
+        </geometry>
+        <origin xyz="0 0 ${base_height / 2.0}" rpy="0 0 0" />
+    </collision>
+
+    <xacro:box_inertia m="5.0" l="${2*base_length}" w="${2*base_width}" h="${2*base_height}" xyz="0 0 ${base_height / 2.0}" rpy="0 0 0" />
+
+    <xacro:box_inertia m="5.0" l="${2*base_length}" w="${2*base_width}" h="${2*base_height}" xyz="0 0 ${base_height / 2.0}" rpy="0 0 0" />
+
+    <xacro:sphere_inertia m="0.5" r="${2*wheel_radius / 2.0}" xyz="0 0 0" rpy="0 0 0" />
+
+    
 </robot>
