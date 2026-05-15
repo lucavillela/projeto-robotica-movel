@@ -1,0 +1,32 @@
+# --- ROS 2 / Colcon ---
+# Ignora as pastas geradas automaticamente pelo colcon build
+build/
+install/
+log/
+
+# --- Python ---
+# Essencial para quem trabalha com Python e Data Science
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ipynb_checkpoints/
+
+# --- Ambientes Virtuais ---
+# Como você prefere usar venvs, garanta que elas não subam para o repositório
+.venv/
+venv/
+env/
+ENV/
+
+# --- IDEs e Editores ---
+# Configurações do VS Code (vistas no seu print)
+.vscode/
+# Arquivos do sistema macOS (já que você usa um MacBook Air M4)
+.DS_Store
+# Arquivos temporários do Linux/Vim
+*.swp
+*~
+
+# --- Binários e Bibliotecas ---
+*.so
