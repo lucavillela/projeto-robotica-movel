@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
+
 <!--
 Luca Torres Villela
 -->
+
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <xacro:property name="base_length" value="0.6" />
@@ -26,7 +28,7 @@ Luca Torres Villela
             </geometry>
             <origin xyz="0 0 ${base_height / 2.0}" rpy="0 0 0" />
         </collision>
-        <xacro:box_inertia m="5.0" l="${base_length}" w="${base_width}" h="${base_height}" xyz="0 0 ${base_height / 2.0}" rpy="0 0 0" />
+        <xacro:box_inertia m="5.0" l="${2*base_length}" w="${2*base_width}" h="${2*base_height}" xyz="0 0 ${base_height / 2.0}" rpy="0 0 0" />
     </link>
 
     <link name="left_wheel">
@@ -77,7 +79,7 @@ Luca Torres Villela
             </geometry>
             <origin xyz="0 0 0" rpy="0 0 0" />
         </collision>
-        <xacro:sphere_inertia m="0.5" r="${wheel_radius / 2.0}" xyz="0 0 0" rpy="0 0 0" />
+        <xacro:sphere_inertia m="0.5" r="${2*wheel_radius / 2.0}" xyz="0 0 0" rpy="0 0 0" />
     </link>
 
     <joint name="base_joint" type="fixed">
